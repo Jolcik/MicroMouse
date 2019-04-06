@@ -57,7 +57,7 @@ public class FunkcjePomocniczne {
 
         // zalewanie
         segmenty[Segment.ROZMIAR_LABIRYNTU-1][Segment.ROZMIAR_LABIRYNTU-1].zalej( segmenty ); // zalewamy pierwszy segment, reszta wykona się rekurencyjnie
-        int licznikNiezalanych = 0; // mam nadzieję, że to tylko referencja jest przekazywana XD
+        int licznikNiezalanych = 0; // mam nadzieję, że to tylko referencja jest przekazywana
         for(int i = 0; i < Segment.ROZMIAR_LABIRYNTU; ++i) // lecimy po wszystkich segmentach i szukamy niezalanych
             for(int j = 0; j < Segment.ROZMIAR_LABIRYNTU; ++j){
                 if(!segmenty[i][j].czyZalany) ++licznikNiezalanych; // jeżeli wykryje niezalany to inkrementuj

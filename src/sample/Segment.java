@@ -80,6 +80,8 @@ public class Segment extends Parent{
         if( index2 != ROZMIAR_LABIRYNTU-1 ) prawo = false;
             else prawo = true;
 
+        // reczne tworzenie czworokatow skladajacych sie na segment
+        // to sa boki akurat
         bokGorny = new Polygon();
         bokGorny.getPoints().addAll(przesuniecieX + 0.00 + 40*index2, przesuniecieY + 0.00 + 40*index1,
                 przesuniecieX + 40.00 + 40*index2, przesuniecieY +  0.00 + 40*index1,
@@ -101,7 +103,8 @@ public class Segment extends Parent{
                 przesuniecieX + 35.00 + 40*index2, przesuniecieY +  35.00 + 40*index1,
                 przesuniecieX + 35.00 + 40*index2, przesuniecieY +  5.00 + 40*index1 );
 
-
+        // srodki segmentu
+        // rozroznienie jest po to by obie czesci byly klikalne, ale w innych kolorach
         trojkatGorny = new Polygon();
         trojkatGorny.getPoints().addAll(przesuniecieX + 0.00 + 40*index2, przesuniecieY + 0.00 + 40*index1,
                 przesuniecieX + 40.00 + 40*index2, przesuniecieY +  0.00 + 40*index1,
@@ -135,8 +138,7 @@ public class Segment extends Parent{
         trojkatLewy.setFill(Color.WHITE);
         trojkatPrawy.setFill(Color.WHITE);
 
-
-
+        // klikniecia w odpowiednie czworokaty robi to samo
         trojkatGorny.setOnMouseClicked(e ->  przelacz( GORA ) );
         trojkatDolny.setOnMouseClicked(e ->  przelacz( DOL ) );
         trojkatLewy.setOnMouseClicked(e ->  przelacz( LEWO ) );
@@ -145,18 +147,16 @@ public class Segment extends Parent{
         bokDolny.setOnMouseClicked(e ->  przelacz( DOL ) );
         bokLewy.setOnMouseClicked(e ->  przelacz( LEWO ) );
         bokPrawy.setOnMouseClicked(e ->  przelacz( PRAWO ) );
-
-
     }
 
     public void przelacz( int wybor ){
         if(Symulator.czyTrwaSymulacja) return;
 
         switch(wybor){
-            case GORA: if(index1 != 0)  gora = !gora;   break;
-            case DOL: if(index1 != ROZMIAR_LABIRYNTU-1) dol = !dol;     break;
-            case LEWO: if(index2 != 0)  lewo = !lewo;   break;
-            case PRAWO: if(index2 != ROZMIAR_LABIRYNTU-1) prawo = !prawo; break;
+            case GORA: if(index1 != 0)  gora = !gora;                       break;
+            case DOL: if(index1 != ROZMIAR_LABIRYNTU-1) dol = !dol;         break;
+            case LEWO: if(index2 != 0)  lewo = !lewo;                       break;
+            case PRAWO: if(index2 != ROZMIAR_LABIRYNTU-1) prawo = !prawo;   break;
         }
         this.aktualizujKolory();
 

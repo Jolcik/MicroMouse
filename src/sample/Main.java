@@ -160,7 +160,7 @@ public class Main extends Application {
 
 
 
-        // DZIAŁANIE PRZYCISKÓW
+        // DZIAŁANIE PRZYCISKOW
         przyciskNastepny.setOnAction( e -> symulator.NastepnyKrok());
         przyciskPoprzedni.setOnAction( e -> symulator.PoprzedniKrok());
         przyciskDoSprawdzaniaBledow.setOnAction(e -> FunkcjePomocniczne.sprawdzBledy( segmenty, primaryStage, false ));
@@ -169,7 +169,7 @@ public class Main extends Application {
         przyciskGeneruj.setOnAction( e -> FunkcjePomocniczne.generujLosowyLabirynt(segmenty));
         przyciskWczytaj.setOnAction( e -> FunkcjePomocniczne.wczytajLabirynt(segmenty, primaryStage ));
 
-        // WYŁĄCZANIE PRZYCISKÓW
+        // WYŁĄCZANIE PRZYCISKOW
         przyciskWlaczSymulacje.setOnAction( e -> {
             przyciskWlaczSymulacje.setDisable(true);
             przyciskWylaczSymulacje.setDisable(false);

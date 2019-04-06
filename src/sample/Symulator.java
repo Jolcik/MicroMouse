@@ -173,15 +173,22 @@ public  class Symulator extends Parent {
         napisyIPrzyciskiDoStatystyk.setLayoutX(-10);
         this.getChildren().add(napisyIPrzyciskiDoStatystyk);
 
+        // ustawianie interakcji
+
         przycisk_jazdaNaprzod_dodawanie.setOnAction(e -> { czasTrwaniaNaprzod += 0.05; ZaktualizujNapisyDoStatystyk();});
-        przycisk_jazdaNaprzod_odejmowanie.setOnAction(e -> { if(czasTrwaniaNaprzod > 0.05)czasTrwaniaNaprzod -= 0.05;
-        ZaktualizujNapisyDoStatystyk();});
+        przycisk_jazdaNaprzod_odejmowanie.setOnAction(e -> {
+            if(czasTrwaniaNaprzod > 0.05) czasTrwaniaNaprzod -= 0.05;
+            ZaktualizujNapisyDoStatystyk();});
         przycisk_obrot_dodawanie.setOnAction(e -> { czasTrwaniaObrot += 0.05; ZaktualizujNapisyDoStatystyk();});
-        przycisk_obrot_odejmowanie.setOnAction(e -> { if(czasTrwaniaObrot > 0.05) czasTrwaniaObrot -= 0.05;
-        ZaktualizujNapisyDoStatystyk();});
-        przycisk_naprzodZRzedu_dodawanie.setOnAction(e -> { if(ileProcent < 99.5) ileProcent += 0.5; ZaktualizujNapisyDoStatystyk();});
-        przycisk_naprzodZRzedu_odejmowanie.setOnAction(e -> { if(ileProcent > 0.5) ileProcent -= 0.5;
-        ZaktualizujNapisyDoStatystyk();});
+        przycisk_obrot_odejmowanie.setOnAction(e -> {
+            if(czasTrwaniaObrot > 0.05) czasTrwaniaObrot -= 0.05;
+            ZaktualizujNapisyDoStatystyk();});
+        przycisk_naprzodZRzedu_dodawanie.setOnAction(e -> {
+            if(ileProcent < 99.5) ileProcent += 0.5;
+            ZaktualizujNapisyDoStatystyk();});
+        przycisk_naprzodZRzedu_odejmowanie.setOnAction(e -> {
+            if(ileProcent > 0.5) ileProcent -= 0.5;
+            ZaktualizujNapisyDoStatystyk();});
 
         statystyki_graficznie = new Group();
         napis_ileRozkazow = new Label("Wykonano 0/0 rozkazów");
@@ -228,7 +235,7 @@ public  class Symulator extends Parent {
             ZaktualizujCzasTrwaniaAnimacji();
             robot.ikona.setVisible(true);
             ktoryRozkaz = 0;
-            przyciskAuto.setDisable(true);
+            przyciskAuto.setDisable(true); // chowamy wszystko co trzeba i pokazujemy statystyki
             napisyIPrzyciskiDoStatystyk.setDisable(true);
             statystyki_graficznie.setDisable(false);
             czyTrwaSymulacja = true;
@@ -236,6 +243,7 @@ public  class Symulator extends Parent {
             if(!zaladujRozkazy()) {
                 czyTrwaAnimacja = true; // to jest po to, żeby przyciski do następnych kroków nie działąły jeśli
                 return;                 // nie uda się załadować rozkazów
+                                        // nie wylacza symulacji, tylko ja stopuje, trzeba recznie ja wylaczyc
             }
             ZaktualizujStatystykiLive();
 
@@ -251,11 +259,11 @@ public  class Symulator extends Parent {
         robot.ikona.setVisible(false);
         // tworzenie robota od nowa, bo paradoksalnie łatwiej to zrobić niż go ustawić
         robot = new Robot(Segment.ROZMIAR_LABIRYNTU-1, 0, Segment.GORA);
-        animacjaNaprzod.setNode(robot.ikona);
+        animacjaNaprzod.setNode(robot.ikona); // ustawiamy robota jako cel naszych animacji
         obrotWPrawo.setNode(robot.ikona);
         obrotWLewo.setNode(robot.ikona);
         this.getChildren().add(robot.ikona);
-        rozkazy.clear();
+        rozkazy.clear(); // czyscimy wszystkie listy
         czasyTrwaniaLacznie.clear();
         czasyTrwania.clear();
         ktoryRozkaz = -1;
@@ -265,7 +273,6 @@ public  class Symulator extends Parent {
 
         czyTrwaAnimacja = false;
         czyPrzekroczonoSciane = false;
-
     }
 
     boolean zaladujRozkazy(){
@@ -277,7 +284,6 @@ public  class Symulator extends Parent {
         File plik = fileLoader.showOpenDialog(this.getScene().getWindow());
 
         try( BufferedReader plikDoWczytywania = new BufferedReader(new FileReader(plik)) ) {
-            // trzeba zrobić sprawdzanie, czy dane na pliku są ok
             // sprawdzanie błędów
 
             int liczba = -1;
@@ -288,34 +294,40 @@ public  class Symulator extends Parent {
                                                   // jeżeli nie jest to wyrzuci wyjątek
                 if(liczba < 0 || liczba > 3)      // czy liczba jest w dobrym zakresie
                     throw new Exception();
-                if( liczba == 0) czyZnalezionoZero = true;
+                if( liczba == 0){
+                    czyZnalezionoZero = true;
+                    break; // nie sprawdzamy po 0 bo i tak przerwie
+                }
                 linia = plikDoWczytywania.readLine();
             }
             if(!czyZnalezionoZero) throw new Exception(); // jak nie ma zera to koniec
 
             BufferedReader plikDoWczytywania2 = new BufferedReader(new FileReader(plik)); // ładujemy plik od nowa
             // bo rewinda nie ma ;c
+            // a moze i jest cos takiego ale tak latwiej
 
-            czasyTrwaniaLacznie.add(0.00);
+            // tutaj juz nie sprawdzamy nic, bo wczesniej sprawdzilismy
+
+            czasyTrwaniaLacznie.add(0.00); // zeby na samym poczatku bylo widac 0.00
             czasyTrwania.add(0.00);
             while(true) {
                 int wczyt = Integer.parseInt(plikDoWczytywania2.readLine());
                 rozkazy.add(wczyt);
                 double czas = 0;
                 switch(wczyt){
-                    case 0: break;
-                    case 1:
+                    case 0: break; // 0 oznacza koniec wczytywania
+                    case 1: // ruch naprzod moze byc krotszy jesli jest to pare ruchow naprzod z rzedu
                         if(czasyTrwaniaLacznie.size() > 0 && czasyTrwaniaLacznie.size() != 1 && rozkazy.get(czasyTrwaniaLacznie.size()-2) == 1 )
                             czas = czasTrwaniaNaprzod * ((100-ileProcent)/100);
                         else czas = czasTrwaniaNaprzod;
                         break;
-                    case 2: czas = czasTrwaniaObrot; break;
+                    case 2: czas = czasTrwaniaObrot; break; // obrot robota trwa zawsze tyle samo
                     case 3: czas = czasTrwaniaObrot; break;
                 }
                 czasyTrwania.add(czas);
                 if(czasyTrwaniaLacznie.size() == 0) czasyTrwaniaLacznie.add(czas);
                 else czasyTrwaniaLacznie.add(czas + czasyTrwaniaLacznie.get(czasyTrwaniaLacznie.size()-1));
-                if(wczyt == 0) break;
+                if(wczyt == 0) break; // wyjscie z petli
             }
             return true;
         }
